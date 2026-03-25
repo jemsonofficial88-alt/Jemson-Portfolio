@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jemson — Python Automation</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --text: #111111;
+    --muted: #6b6b6b;
+    --subtle: #a0a0a0;
+    --border: #e8e8e8;
+    --bg: #ffffff;
+    --bg2: #f9f9f9;
+    --accent: #111111;
+    --green: #16a34a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-logo {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.3px;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 14px;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .nav-cta {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 18px;
+    background: var(--text);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .nav-cta:hover { opacity: 0.8; }
+
+  /* SECTIONS */
+  section {
+    padding: 96px 40px;
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  section:first-of-type { padding-top: 140px; }
+
+  /* HERO */
+  .hero {
+    padding-top: 160px;
+    padding-bottom: 96px;
+  }
+
+  .hero-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--green);
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    padding: 4px 10px;
+    border-radius: 100px;
+    margin-bottom: 28px;
+  }
+
+  .hero-tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 5vw, 52px);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -1.5px;
+    margin-bottom: 20px;
+    color: var(--text);
+  }
+
+  .hero h1 span {
+    color: var(--subtle);
+  }
+
+  .hero p {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: var(--text);
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .btn-primary:hover { opacity: 0.8; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: white;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 8px;
+    text-decoration: none;
+    border: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+
+  .btn-secondary:hover { background: var(--bg2); }
+
+  /* DIVIDER */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 40px;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--subtle);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 32px;
+  }
+
+  /* SERVICES */
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .service-card {
+    background: var(--bg);
+    padding: 28px 24px;
+    transition: background 0.15s;
+  }
+
+  .service-card:hover { background: var(--bg2); }
+
+  .service-icon {
+    font-size: 22px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .service-card h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -0.2px;
+  }
+
+  .service-card p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  .service-price {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  /* PROJECTS */
+  .project-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    transition: border-color 0.15s;
+  }
+
+  .project-card:hover { border-color: #c0c0c0; }
+
+  .project-header {
+    padding: 24px 28px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg2);
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .project-header-left h3 {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+  }
+
+  .project-header-left p {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .project-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: #f0fdf4;
+    color: var(--green);
+    border: 1px solid #bbf7d0;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .project-body {
+    padding: 24px 28px;
+  }
+
+  .project-body p {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.7;
+  }
+
+  .project-meta {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .meta-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--subtle);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .meta-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 16px;
+  }
+
+  .tech-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted);
+  }
+
+  /* COMING SOON CARD */
+  .project-card.placeholder {
+    border-style: dashed;
+    opacity: 0.5;
+  }
+
+  .project-card.placeholder .project-header {
+    background: transparent;
+  }
+
+  /* PROCESS */
+  .process-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .process-step {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .process-step:last-child { border-bottom: none; }
+
+  .process-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--subtle);
+    min-width: 28px;
+    padding-top: 2px;
+  }
+
+  .process-content h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    letter-spacing: -0.2px;
+  }
+
+  .process-content p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* CONTACT */
+  .contact-box {
+    background: var(--text);
+    border-radius: 12px;
+    padding: 48px 40px;
+    text-align: center;
+  }
+
+  .contact-box h2 {
+    font-size: 26px;
+    font-weight: 600;
+    color: white;
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+
+  .contact-box p {
+    font-size: 15px;
+    color: #a0a0a0;
+    margin-bottom: 28px;
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .btn-white {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 13px 26px;
+    background: white;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: opacity 0.15s;
+  }
+
+  .btn-white:hover { opacity: 0.9; }
+
+  /* FOOTER */
+  footer {
+    padding: 32px 40px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  footer p {
+    font-size: 13px;
+    color: var(--subtle);
+  }
+
+  footer a {
+    font-size: 13px;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  footer a:hover { color: var(--text); }
+
+  /* MOBILE */
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    nav .nav-links { display: none; }
+    section { padding: 72px 20px; }
+    section:first-of-type { padding-top: 120px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .contact-box { padding: 36px 24px; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+    .hero { padding-top: 120px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Jemson.</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#process">Process</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://www.fiverr.com/JemsonAutomati_" target="_blank" class="nav-cta">Hire on Fiverr →</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-tag">Available for work</div>
+  <h1>Python Automation<br><span>for Busy People.</span></h1>
+  <p>I build Python scripts that save you time — web scraping, data cleaning, and file automation. Clean code, fast delivery, plain-English instructions.</p>
+  <div class="hero-buttons">
+    <a href="https://www.fiverr.com/JemsonAutomati_" target="_blank" class="btn-primary">View Fiverr Profile →</a>
+    <a href="#projects" class="btn-secondary">See My Work</a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-label">What I offer</div>
+  <div class="services-grid">
+    <div class="service-card">
+      <span class="service-icon">🕸️</span>
+      <h3>Web Scraping</h3>
+      <p>Extract data from any public website into a clean Excel or CSV file. Handles pagination, multiple pages, and large datasets.</p>
+      <div class="service-price">Starting at $30</div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">🧹</span>
+      <h3>Data Cleaning</h3>
+      <p>Turn messy spreadsheets into clean, structured data. Remove duplicates, fix formats, fill missing values, and restructure columns.</p>
+      <div class="service-price">Starting at $25</div>
+    </div>
+    <div class="service-card">
+      <span class="service-icon">⚙️</span>
+      <h3>File Automation</h3>
+      <p>Bulk rename, sort, move, or convert files automatically. Save hours of manual work with a script that runs in seconds.</p>
+      <div class="service-price">Starting at $25</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">Projects</div>
+
+  <!-- PROJECT 1 — Book Scraper -->
+  <div class="project-card">
+    <div class="project-header">
+      <div class="project-header-left">
+        <h3>Book Data Scraper</h3>
+        <p>Scraped 1,000 books across 50 pages into a structured CSV</p>
+      </div>
+      <div class="project-tag">Completed</div>
+    </div>
+    <div class="project-body">
+      <p>Built a Python scraper that extracted book titles, prices, and ratings from a multi-page catalogue website. The script automatically loops through all 50 pages, handles errors gracefully if a page fails to load, respects the server with a delay between requests, and saves the complete dataset to a clean CSV file.</p>
+      <div class="project-meta">
+        <div class="meta-item">
+          <div class="meta-label">Records scraped</div>
+          <div class="meta-value">1,000 books</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Pages handled</div>
+          <div class="meta-value">50 pages</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Output format</div>
+          <div class="meta-value">CSV file</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Error handling</div>
+          <div class="meta-value">Yes</div>
+        </div>
+      </div>
+      <div class="tech-tags">
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">BeautifulSoup</span>
+        <span class="tech-tag">Requests</span>
+        <span class="tech-tag">CSV</span>
+        <span class="tech-tag">Pagination</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLACEHOLDER 2 -->
+  <div class="project-card placeholder">
+    <div class="project-header">
+      <div class="project-header-left">
+        <h3>Data Cleaning Script</h3>
+        <p>Coming soon — currently in practice</p>
+      </div>
+      <div class="project-tag" style="background:#fafafa;color:#a0a0a0;border-color:#e8e8e8;">In progress</div>
+    </div>
+    <div class="project-body">
+      <p>A Python script using Pandas to clean and restructure messy customer data — removing duplicates, standardising phone numbers and emails, fixing capitalisation, and filling missing values.</p>
+      <div class="tech-tags">
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">Pandas</span>
+        <span class="tech-tag">Excel</span>
+        <span class="tech-tag">CSV</span>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<hr class="divider">
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-label">How it works</div>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="process-num">01</div>
+      <div class="process-content">
+        <h4>Send me a message</h4>
+        <p>Tell me what you need — the website URL, a sample of your file, or a description of the task. The more detail the better. I will reply within 24 hours.</p>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">02</div>
+      <div class="process-content">
+        <h4>I confirm the scope</h4>
+        <p>Before anything starts, I repeat back to you exactly what I will build, what the output will look like, and the timeline. No surprises.</p>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">03</div>
+      <div class="process-content">
+        <h4>I build and test it</h4>
+        <p>I write the script, run it, verify the output, and test edge cases. I only deliver when I am confident it works correctly on real data.</p>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-num">04</div>
+      <div class="process-content">
+        <h4>You receive everything</h4>
+        <p>Delivery includes the working script, your output file, a plain-English README with step-by-step instructions, and a short video walkthrough. Revisions included.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-box">
+    <h2>Ready to automate something?</h2>
+    <p>Send me a message on Fiverr and describe what you need. I will get back to you within 24 hours.</p>
+    <a href="https://www.fiverr.com/JemsonAutomati_" target="_blank" class="btn-white">Message me on Fiverr →</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Jemson. Python Automation Freelancer.</p>
+  <a href="https://www.fiverr.com/JemsonAutomati_" target="_blank">Fiverr Profile →</a>
+</footer>
+
+</body>
+</html>
